@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Data</title>
+</head>
+<body>
+    <div>
+        <label for="StockInfo">Stock Info</label>
+        <input type="text" id="StockInfo" />
+        <button onclick="fetchStockData()">Fetch Stock Data</button>
+    </div>
+    <div id="stockData"></div>
+    <script>
+        async function fetchStockData() {
+            const symbol = document.getElementById('symbolInput').value;
+            const query = `
+                {
+                    stock(name: "${name}") {
+                        
+                        historical_prices
+                        highest_price
+                        lowest_price
+                        trading_volume
+                    }
+                }
+            `;
+
+            const response = await fetch('http://127.0.0.1:5000', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query }),
+            });
+
+            const data = await response.json();
+            const stockData = data.data.stock;
+
+            const stockDataElement = document.getElementById('stockData');
+            stockDataElement.innerHTML = JSON.stringify(stockData, null, 2);
+        }
+    </script>
+</body>
+</html>
